@@ -37,18 +37,24 @@ def add_magents(client, folder):
             traceback.print_exc()
 
 
+def usage(err=''):
+    print(f"usage: {sys.argv[0]} FOLDER [DESTINATION_FOLDER_ID]")
+    print(f"provide oauth token as $PUTIO_OAUTH_TOKEN")
+    if err:
+        print(f'\n{err}')
+    sys.exit(1)
+
+
 def main():
     try:
         folder = sys.argv[1]
     except IndexError:
-        print(f"usage: {sys.argv[0]} FOLDER")
-        sys.exit(1)
+        usage('no source folder given')
 
     try:
         access_token = os.environ['PUTIO_OAUTH_TOKEN']
     except LookupError:
-        print(f"provide oauth token as $PUTIO_OAUTH_TOKEN")
-        sys.exit(1)
+        usage('no access token given')
 
     client = putiopy.Client(access_token)
     add_torrents(client, folder)
